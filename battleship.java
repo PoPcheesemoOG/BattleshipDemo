@@ -1,12 +1,16 @@
+/* Name: Paul Helske
+ * Date: 06/20/23
+ */
+package exercise;
 
-public class battleship {
+public class Battleship {
 	
 	private String name = "";
 	private int size = 0;
 	private char row = 'A';
 	private int col = 0;
 	
-	public battleship(String name, int size, char row, int col) {
+	public Battleship(String name, int size, char row, int col) {
 		this.name = name;
 		this.size = size;
 		this.row = row;
