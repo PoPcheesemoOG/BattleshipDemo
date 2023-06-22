@@ -7,10 +7,10 @@ public class Battleship {
 	
 	private String name = "";
 	private int size = 0;
-	private char row = 'A';
+	private int row = 0;
 	private int col = 0;
 	
-	public Battleship(String name, int size, char row, int col) {
+	public Battleship(String name, int size, int row, int col) {
 		this.name = name;
 		this.size = size;
 		this.row = row;
@@ -29,13 +29,13 @@ public class Battleship {
 	public void setName(int size) {
 		this.size = size;
 	}
-	public char getRow() {
+	public int getRow() {
 		return this.row;
 	}
-	public void setRow(char row) {
+	public void setRow(int row) {
 		this.row = row;
 	}
-	public int geCol() {
+	public int getCol() {
 		return this.col;
 	}
 	public void setCol(int col) {
