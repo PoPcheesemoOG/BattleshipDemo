@@ -7,13 +7,13 @@
 public class Battleship {
 	public enum ShipType {Torpedo_Boat, Destroyer, Corvette, Frigate, Dreadnought};
 	
-	private String name = "";
-	private int size = 0;
-	private int row = 0;
-	private int column = 0;
+	public String name = "";
+	public static int rowsize = 0;
+	public static int colsize = 0;
+	public int row = 0;
+	public int column = 0;
 	
-	public Battleship (ShipType shipType, int size, int row, int col) {
-		this.size = size;
+	public Battleship (ShipType shipType, int rowsize, int colsize, int row, int col) {
 		this.row = row;
 		this.column = col;
 	}
@@ -24,15 +24,19 @@ public class Battleship {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public void setSize(int newSize) {
-		this.size = newSize;
+	public static void setRowSize(int newSize) {
+		rowsize = newSize;
 	}
-	public int getSize() {
-		return this.size;
+	public static int getRowSize() {
+		return rowsize;
 	}
-	public void setName(int size) {
-		this.size = size;
+	public static void setColSize(int newSize) {
+		colsize = newSize;
 	}
+	public static int getColSize() {
+		return colsize;
+	}
+	
 	public int getRow() {
 		return this.row;
 	}
