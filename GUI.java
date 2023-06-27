@@ -1,11 +1,7 @@
 /* Name: Paul Helske
  * Date: 06/15/2023
  */
-
-
 import java.util.ArrayList;
-
-
 import javafx.application.*;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
@@ -29,35 +25,32 @@ public class GUI extends Application {
 	static gameBoard activeBoard; 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		
 		//Creating stage
 		primaryStage.setTitle("BATTLESHIP DEMO");
 		Pane pane = new Pane();
 		GridPane map = new GridPane();
-		activeBoard = new gameBoard();
-		
 		Circle BS = new Circle(0, 0, 10);
 		BS.setFill(Color.RED);
 
 		map.add(BS, 0, 0);
+		map.setHgap(3);
+		map.setVgap(3);
+		
+		activeBoard = new gameBoard();
 		GameBoard.instantiateGrid(map);
 		Rectangle[][] rects = GameBoard.instantiateGridRects();
 		GameBoard.addRectsToGrid(map, rects);
 		
-		map.setHgap(3);
-		map.setVgap(3);
-
-		pane.getChildren().addAll(map);
-		
 		int sceneH = activeBoard.height * 40;
 		int sceneW = activeBoard.width * 40;
 		
+		pane.getChildren().addAll(map);
 		Scene scene = new Scene(pane, sceneH, sceneW);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
 	public static void main(String[] args) {
 		launch (args);
-
 	}
-
 }
