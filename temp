@@ -35,38 +35,12 @@ public class GameBoard {
 			mapcols[i] = new Text("  " + rowName + "  ");
 			map.add(mapcols[i], i + 1, 0);
 		}
-		
-		createBoard(tBoat, board[height][width]);
 	}
-	
-	static void createBoard(Battleship battleship, BoardSquare board) {
-		int startX = battleship.column; 
-		int startY = battleship.row; 
-		int newX = battleship.colsize;
-		int newY = battleship.rowsize; 
-		
-		//for loop that will go for the length of a piece;
-		for (int i = 0; i < newX; i++) {
-			board[startX + i][startY].state = board.state.HiddenBoatPiece;
-		}
-		
-		//for loop that will go for the height of a piece;
-		for (int i = 0; i < newY; i++) {
-			board[startX][startY + 1].state = BoardSquare.SquareState.HiddenBoatPiece;
-		}
-		
-		//board[newX][startY].state = filledHidden;
-		
-		//board[startX][newY] = filledHidden;
-	}
-	
-	// Creating gameboard 
-	public static void addRectsToGrid(GridPane map, Rectangle[][] rectsToAdd, BoardSquare[][] board) {
+
+	public static void addRectsToGrid(GridPane map, Rectangle[][] rectsToAdd) {
 		for(int i = 1; i < (height + 1); i ++) {
 			for(int j = 1; j < (width + 1); j++) {
 				map.add(rectsToAdd[i-1][j-1], i, j);
-				board[][]
-				
 			}
 		}
 		for(int i = 1; i < (height + 1); i ++) {
@@ -79,8 +53,6 @@ public class GameBoard {
 					// Fire at this coordinate
 					coordinates = ("" + rowName + colName);
 					System.out.println("Firing at " + coordinates + "...");
-					
-					//System.out.println("BINGO " + row + " " + column);
 					
 					if (checkForBoat(row, column) == true) {
 						System.out.println("HIT!");
@@ -117,6 +89,17 @@ public class GameBoard {
 
 		return sq;
 	}
+	public static Rectangle Flag() {
+		Rectangle fl = new Rectangle();
+		fl.setX(15);
+		fl.setY(15);
+		fl.setWidth(30);
+		fl.setHeight(30);
+		fl.setStroke(Color.DARKGRAY);
+		fl.setFill(Color.RED);
+
+		return fl;
+	}
 	public static Rectangle[][] instantiateGridRects() {
 		Rectangle[][] rects = new Rectangle[height][width];
 		for(int i = 0; i < height; i++) {
@@ -126,6 +109,15 @@ public class GameBoard {
 		}
 		return rects;
 	}
+	public static Rectangle[][] instantiateGridFlags() {
+		Rectangle[][] flags = new Rectangle[height][width];
+		for(int i = 0; i < height; i++) {
+			for(int j = 0; j < width; j++) {
+				flags[i][j] = Flag();
+			}
+		}
+		return flags;
+	}
 	public static Text mapindex() {
 		Text txt = new Text();
 
@@ -134,30 +126,33 @@ public class GameBoard {
 } 
 
 
+//
+//
+//
+//
 
-
-//
-//
-//
-//
 
 public class BoardSquare {
 	public enum SquareState {Water, HiddenBoatPiece, ExposedBoatPiece};
-	public static SquareState state;
-	
-	public int boatRow = Battleship.getRowSize();
-	public int boatCol = Battleship.getColSize();
+	public static SquareState state = SquareState.Water;
 
-	public static void hideBoats(int boatRow, int boatCol) {
-		for (int i = 0; i < boatRow; i++) {
-			state = SquareState.HiddenBoatPiece;
-		}
-		for (int i = 0; i < boatCol; i++) {
-			state = SquareState.HiddenBoatPiece;
-		}		
+	static int height = GameBoard.height;
+	static int width = GameBoard.width;
+	
+	public int boatRow;
+	public int boatCol;
+	
+	public BoardSquare(SquareState newstate, int boatRow, int boatCol) {
+		state = newstate;
+		boatRow = Battleship.getRowSize();
+		boatCol = Battleship.getColSize();
+	}
+	
+	public static SquareState setState(SquareState newstate) {
+		state = newstate;
+		return state;
 	}
 }
-
 
 
 
@@ -171,6 +166,8 @@ public class BoardSquare {
  * Date: 06/20/23
  */
 
+
+
 public class Battleship {
 	public enum ShipType {Torpedo_Boat, Destroyer, Corvette, Frigate, Dreadnought};
 	
@@ -180,8 +177,8 @@ public class Battleship {
 	public static int row = 0;
 	public static int column = 0;
 	
-	public Battleship (ShipType shipType, int rowsize, int colsize, int row1, int col) {
-		row = row1;
+	public Battleship (ShipType shipType, int rowsize, int colsize, int newrow, int col) {
+		row = newrow;
 		column = col;
 	}
 	
@@ -205,18 +202,17 @@ public class Battleship {
 	}
 	
 	public int getRow() {
-		return this.row;
+		return row;
 	}
-	public void setRow(int row) {
-		this.row = row;
+	public void setRow(int newrow) {
+		row = newrow;
 	}
 	public int getCol() {
-		return this.column;
+		return column;
 	}
 	public void setCol(int col) {
-		this.column = col;
+		column = col;
 	}
-
 }
 
 //
@@ -225,7 +221,6 @@ public class Battleship {
 //
 //
 //
-
 /* Name: Paul Helske
  * Date: 06/15/2023
  */
@@ -256,8 +251,9 @@ public class GUI extends Application {
 		
 		//Creating stage
 		primaryStage.setTitle("BATTLESHIP DEMO");
-		Pane pane = new Pane();
+		StackPane pane = new StackPane();
 		GridPane map = new GridPane();
+		GridPane flag = new GridPane();
 		Circle BS = new Circle(0, 0, 10);
 		BS.setFill(Color.RED);
 
@@ -265,15 +261,22 @@ public class GUI extends Application {
 		map.setHgap(3);
 		map.setVgap(3);
 		
+		flag.add(BS, 0, 0);
+		flag.setHgap(3);
+		flag.setVgap(3);
+		
 		activeBoard = new gameBoard();
 		GameBoard.instantiateGrid(map);
+		GameBoard.instantiateGrid(flag);
 		Rectangle[][] rects = GameBoard.instantiateGridRects();
+		Rectangle[][] flags = GameBoard.instantiateGridFlags();
 		GameBoard.addRectsToGrid(map, rects);
+		GameBoard.addRectsToGrid(flag, flags);
 		
 		int sceneH = activeBoard.height * 40;
 		int sceneW = activeBoard.width * 40;
 		
-		pane.getChildren().addAll(map);
+		pane.getChildren().addAll(map, flag);
 		Scene scene = new Scene(pane, sceneH, sceneW);
 		primaryStage.setScene(scene);
 		primaryStage.show();
