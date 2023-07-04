@@ -28,15 +28,16 @@ public class GUI extends Application {
 		
 		//Creating stage
 		primaryStage.setTitle("BATTLESHIP DEMO");
-		Pane pane = new Pane();
+		StackPane pane = new StackPane();
 		GridPane map = new GridPane();
+		// GridPane flag = new GridPane();
 		Circle BS = new Circle(0, 0, 10);
 		BS.setFill(Color.RED);
 
 		map.add(BS, 0, 0);
 		map.setHgap(3);
 		map.setVgap(3);
-		
+
 		activeBoard = new gameBoard();
 		GameBoard.instantiateGrid(map);
 		Rectangle[][] rects = GameBoard.instantiateGridRects();
