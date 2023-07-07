@@ -15,24 +15,29 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.*;
 import javafx.scene.shape.*;
 
-
-
 public class GUI extends Application {
 	class gameBoard{
 		public int width = 10;
 		public int height = 10;
+		
 	}
+	
 	static gameBoard activeBoard; 
+	public Group group = new Group();
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		
 		//Creating stage
 		primaryStage.setTitle("BATTLESHIP DEMO");
-		StackPane pane = new StackPane();
+		
 		GridPane map = new GridPane();
-		// GridPane flag = new GridPane();
 		Circle BS = new Circle(0, 0, 10);
 		BS.setFill(Color.RED);
+		
+		// Creating Pane for losing
+		Pane losePane = new Pane();
+		// Creating Pane for winning
+		Pane winPane = new Pane();
 
 		map.add(BS, 0, 0);
 		map.setHgap(3);
@@ -45,10 +50,19 @@ public class GUI extends Application {
 		
 		int sceneH = activeBoard.height * 40;
 		int sceneW = activeBoard.width * 40;
+		Text loseText = new Text((sceneH / 2), (sceneW / 2), "You have lost\nCare to try again?");
+		Text winText = new Text((sceneH / 2), (sceneW / 2), "You have won!!\nCongratlations!\nCare to try again?");
+		group.getChildren().add(GameBoard.shotTracker);
+		group.getChildren().add(GameBoard.hitTracker);
+		group.getChildren().addAll(map);
 		
-		pane.getChildren().addAll(map);
-		Scene scene = new Scene(pane, sceneH, sceneW);
-		primaryStage.setScene(scene);
+		losePane.getChildren().add(loseText);
+		winPane.getChildren().add(winText);
+		
+		Scene gameScene = new Scene(group, sceneH, sceneW);
+		Scene loseScene = new Scene(losePane, sceneH, sceneW);
+		Scene winScene = new Scene(winPane, sceneH, sceneW);
+		primaryStage.setScene(gameScene);
 		primaryStage.show();
 	}
 	public static void main(String[] args) {
