@@ -1,4 +1,3 @@
-
 public class BoardSquare {
 
 	public enum SquareState {Water, Hidden_Boat_Piece, Exposed_Boat_Piece};
