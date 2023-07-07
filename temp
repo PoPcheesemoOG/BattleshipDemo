@@ -2,93 +2,120 @@
  * Date: 06/20/23
  */
 
-
-
 public class Battleship {
 	public enum ShipType {Torpedo_Boat, Destroyer, Corvette, Frigate, Dreadnought};
-	
+
 	public String name = "";
 	public int rowsize = 1;
 	public int colsize = 1;
 	public int row = 1;
 	public int column = 1;
-	
-	public Battleship (ShipType shipType, int rowsize, int colsize) {
+
+	public Battleship (ShipType shipType, String name, int rowsize, int colsize, int row, int column) {
+		this.name = name;
 		this.rowsize = rowsize;
 		this.colsize = colsize;	
+		this.row = row;
+		this.column = column;
 	}
-	
+
 	public boolean setPosition( int column, int row) {
 		this.row = row;
 		this.column = column;
 		return fillGameBoard();
 	}
-	public boolean setTBoatPos() {
+	public void setTBoatPos() {
 		int tboatX = ((int) (Math.random() * 9) + 1);
 		int tboatY = ((int) (Math.random() * 8) + 1);
-		
+
 		setPosition(tboatY, tboatX);
-		System.out.println(rowsize + " " + colsize + " " + row + " " + column);
-		return fillGameBoard();
+		System.out.println(name + rowsize + " " + colsize + " " + row + " " + column);
+		if (setPosition(tboatY, tboatX) == false) {
+			System.out.println(name + " FAILED POSITIONING");
+			setPosition(tboatY, tboatX);
+		}
 	}
-	public boolean setDestroyerPos() {
+	public void setDestroyerPos() {
 		int destroyerX = ((int) (Math.random() * 7) + 1);
 		int destroyerY = ((int) (Math.random() * 9) + 1);
-		
+
 		setPosition(destroyerY, destroyerX);
-		System.out.println(rowsize + " " + colsize + " " + row + " " + column);
-		return fillGameBoard();
+		System.out.println(name + rowsize + " " + colsize + " " + row + " " + column);
+		if (setPosition(destroyerY, destroyerX) == false) {
+			System.out.println(name + " FAILED POSITIONING");
+			setPosition(destroyerY, destroyerX);
+		}
 	}
-	public boolean setCorvettePos() {
+	public void setCorvettePos() {
 		int corvetteX = ((int) (Math.random() * 9) + 1);
 		int corvetteY = ((int) (Math.random() * 6) + 1);
-		
+
 		setPosition(corvetteY, corvetteX);
-		System.out.println(rowsize + " " + colsize + " " + row + " " + column);
-		return fillGameBoard();
+		System.out.println(name + rowsize + " " + colsize + " " + row + " " + column);
+		if (setPosition(corvetteY, corvetteX) == false) {
+			System.out.println(name + " FAILED POSITIONING");
+			setPosition(corvetteY, corvetteX);
+		}
 	}
-	public boolean setFrigatePos() {
+	public void setFrigatePos() {
 		int frigateX = ((int) (Math.random() * 5) + 1);
 		int frigateY = ((int) (Math.random() * 9) + 1);
-		
+
 		setPosition(frigateY, frigateX);
-		System.out.println(rowsize + " " + colsize + " " + row + " " + column);
-		return fillGameBoard();
+		System.out.println(name + rowsize + " " + colsize + " " + row + " " + column);
+		if (setPosition(frigateY, frigateX) == false) {
+			System.out.println(name + " FAILED POSITIONING");
+			setPosition(frigateY, frigateX);
+		}
 	}
-	public boolean setDreadnoughtPos() {
+	public void setDreadnoughtPos() {
 		int dreadnoughtX = ((int) (Math.random() * 9) + 1);
 		int dreadnoughtY = ((int) (Math.random() * 4) + 1);
-		
+
 		setPosition(dreadnoughtY, dreadnoughtX);
-		System.out.println(rowsize + " " + colsize + " " + row + " " + column);
-		return fillGameBoard();
+		System.out.println(name + rowsize + " " + colsize + " " + row + " " + column);
+		if (setPosition(dreadnoughtY, dreadnoughtX) == false) {
+			System.out.println(name + " FAILED POSITIONING");
+			setPosition(dreadnoughtY, dreadnoughtX);
+		}
 	}
 	public boolean positionPiece(int row, int column) {
 		//if we were able to place the piece successfully, return true;
 		//else return false if we couldn't place the piece in the board;
 		return true;
 	}
-	
+
 	public boolean fillGameBoard(){
-	//	System.out.println(rowsize + " " + colsize + " " + row + " " + column);
-		for(int i = 0; i < colsize; i++) {
-			//if square is not water, return false and try again.
-			//Then, make GameBoard give you a new row and column to work with
-			if(GameBoard.board[column + i][row].state != BoardSquare.SquareState.Water) {
-				
-				return false;
+		System.out.println("FGB " + rowsize + " " + colsize + " " + row + " " + column);
+	//	if (this.colsize > 1) {
+			for(int i = 0; i < this.colsize; i++) {
+				//if square is not water, return false and try again.
+				//Then, make GameBoard give you a new row and column to work with
+				if(GameBoard.board[column + i][row].state != BoardSquare.SquareState.Water) {
+					for(int j = 0; j < this.colsize; j++) {
+						GameBoard.board[column + j][row].setState(BoardSquare.SquareState.Water);
+						System.out.println("FGB COLUMN FAILED");
+					}
+					return false;
+				}
+				GameBoard.board[column + i][row].setState(BoardSquare.SquareState.Hidden_Boat_Piece);
 			}
-			GameBoard.board[column + i][row].setState(BoardSquare.SquareState.Hidden_Boat_Piece);
-		}
-		for(int i = 0; i < rowsize; i++) {
-			if(GameBoard.board[column][row + i].state != BoardSquare.SquareState.Water) {
-				return false;
+	//	}
+	//	if (this.rowsize > 1) {
+			for(int i = 0; i < this.rowsize; i++) {
+				if(GameBoard.board[column][row + i].state  != BoardSquare.SquareState.Water) {
+					for(int j = 0; j < this.rowsize; j++) {
+						GameBoard.board[column][row + j].setState(BoardSquare.SquareState.Water);
+						System.out.println("FGB ROW FAILED");
+					}
+					return false;
+				}
+				GameBoard.board[column][row + i].setState(BoardSquare.SquareState.Hidden_Boat_Piece);
 			}
-			GameBoard.board[column][row + i].setState(BoardSquare.SquareState.Hidden_Boat_Piece);
-		}
+	//	}
 		return true;
 	}
-	
+
 	public String getName() {
 		return this.name;
 	}
@@ -107,7 +134,7 @@ public class Battleship {
 	public int getColSize() {
 		return colsize;
 	}
-	
+
 	public int getRow() {
 		return row;
 	}
@@ -227,6 +254,8 @@ public class GUI extends Application {
 //
 //
 //
+
+
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -244,11 +273,7 @@ public class GameBoard {
 	static BoardSquare[][] board = new BoardSquare[height + 1][width + 1];
 
 	// Creating the boats
-	static Battleship tBoat;
-	static Battleship destroyer;
-	static Battleship corvette;
-	static Battleship frigate;
-	static Battleship dreadnought;
+
 
 	public static void instantiateGrid(GridPane map) {
 		Text[] maprows = new Text[width];
@@ -266,62 +291,77 @@ public class GameBoard {
 	public static void checkPos() {
 
 	}
+	static int tboatX = ((int) (Math.random() * 9) + 1);
+	static int tboatY = ((int) (Math.random() * 8) + 1);
+
+	static int destroyerX = ((int) (Math.random() * 7) + 1);
+	static int destroyerY = ((int) (Math.random() * 9) + 1);
+
+	static int corvetteX = ((int) (Math.random() * 9) + 1);
+	static int corvetteY = ((int) (Math.random() * 6) + 1);
+
+	static int frigateX = ((int) (Math.random() * 5) + 1);
+	static int frigateY = ((int) (Math.random() * 9) + 1);
+
+	static int dreadnoughtX = ((int) (Math.random() * 9) + 1);
+	static int dreadnoughtY = ((int) (Math.random() * 4) + 1);
+	
+	static Battleship tBoat = new Battleship(Battleship.ShipType.Torpedo_Boat, "Torpedo Boat", 1, 2, tboatX, tboatY);
+	static Battleship destroyer = new Battleship(Battleship.ShipType.Destroyer, "Destroyer", 3, 1, destroyerX, destroyerY);
+	static Battleship corvette = new Battleship(Battleship.ShipType.Corvette, "Corvette", 1, 3, corvetteX, corvetteY);
+	static Battleship frigate = new Battleship(Battleship.ShipType.Frigate, "Frigate", 4, 1, frigateX, frigateY);
+	static Battleship dreadnought = new Battleship(Battleship.ShipType.Dreadnought, "Dreadnought", 1, 5, dreadnoughtX, dreadnoughtY);
+	
+	
 	public static void initializeBoard() {
-		int tboatX = ((int) (Math.random() * 9) + 1);
-		int tboatY = ((int) (Math.random() * 8) + 1);
-
-		int destroyerX = ((int) (Math.random() * 7) + 1);
-		int destroyerY = ((int) (Math.random() * 9) + 1);
-
-		int corvetteX = ((int) (Math.random() * 9) + 1);
-		int corvetteY = ((int) (Math.random() * 6) + 1);
-
-		int frigateX = ((int) (Math.random() * 5) + 1);
-		int frigateY = ((int) (Math.random() * 9) + 1);
-
-		int dreadnoughtX = ((int) (Math.random() * 9) + 1);
-		int dreadnoughtY = ((int) (Math.random() * 4) + 1);
+		
+		System.out.println("1 tBoat: " + tBoat.row + " " + tBoat.column);
+		System.out.println("1 Destroyer: " + destroyer.row + " " + destroyer.column);
+		System.out.println("1 Corvette: " + corvette.row + " " + corvette.column);
+		System.out.println("1 Frigate: " + frigate.row + " " + frigate.column);
+		System.out.println("1 Dreadnought: " + dreadnought.row + " " + dreadnought.column);
+		
 
 		for(int x = 0; x < board.length; x++) {
 			for(int y = 0; y < board[x].length; y++) {
 				board[x][y] = new BoardSquare(BoardSquare.SquareState.Water, x, y);
 			}
 		}
-		tBoat = new Battleship(Battleship.ShipType.Torpedo_Boat, 1, 2);
+		//tBoat = new Battleship(Battleship.ShipType.Torpedo_Boat, "Torpedo Boat", 1, 2);
 		tBoat.setTBoatPos();
-		if(tBoat.fillGameBoard() == false) {
-			//Regenerate the position
-			//try to set the position again;
-			tBoat.setTBoatPos();
-		}
+//		if(tBoat.fillGameBoard() == false) {
+//			//Regenerate the position
+//			//try to set the position again;
+//			tBoat.setTBoatPos();
+//		}
 		//		destroyer = new Battleship(Battleship.ShipType.Destroyer, 3, 1, destroyerX, destroyerY);
-		destroyer = new Battleship(Battleship.ShipType.Destroyer, 3, 1);
-		if(destroyer.fillGameBoard() == false) {
+		//destroyer = new Battleship(Battleship.ShipType.Destroyer, "Destroyer", 3, 1);
+		//if(destroyer.fillGameBoard() == false) {
 			//Regenerate the position
 			//try to set the position again;
 			destroyer.setDestroyerPos();
-		}
+		//}
 		//		corvette = new Battleship(Battleship.ShipType.Corvette, 1, 3, corvetteX, corvetteY);
-		corvette = new Battleship(Battleship.ShipType.Corvette, 1, 3);
-		if(corvette.fillGameBoard() == false) {
+		//corvette = new Battleship(Battleship.ShipType.Corvette, "Corvette", 1, 3);
+		//if(corvette.fillGameBoard() == false) {
 			//Regenerate the position
 			//try to set the position again;
 			corvette.setCorvettePos();
-		} 
+	//	} 
 		//		frigate = new Battleship(Battleship.ShipType.Frigate, 4, 1, frigateX, frigateY);
-		frigate = new Battleship(Battleship.ShipType.Frigate, 4, 1);
-		if(frigate.fillGameBoard() == false) {
+		//frigate = new Battleship(Battleship.ShipType.Frigate, "Frigate", 4, 1);
+	//	if(frigate.fillGameBoard() == false) {
 			//Regenerate the position
 			//try to set the position again;
 			frigate.setFrigatePos();
-		} 
+	//	} 
 		//		dreadnought = new Battleship(Battleship.ShipType.Dreadnought, 1, 5, dreadnoughtX, dreadnoughtY);
-		dreadnought = new Battleship(Battleship.ShipType.Dreadnought, 1, 5);
-		if(dreadnought.fillGameBoard() == false) {
+		//dreadnought = new Battleship(Battleship.ShipType.Dreadnought, "Dreadnought", 1, 5);
+		//if(dreadnought.fillGameBoard() == false) {
 			//Regenerate the position
 			//try to set the position again;
 			dreadnought.setDreadnoughtPos();
-		}
+	//	}
 		System.out.println("tBoat: " + tBoat.row + " " + tBoat.column);
 		System.out.println("Destroyer: " + destroyer.row + " " + destroyer.column);
 		System.out.println("Corvette: " + corvette.row + " " + corvette.column);
@@ -378,6 +418,8 @@ public class GameBoard {
 						board[row][column].setState(BoardSquare.SquareState.Exposed_Boat_Piece);
 						rectsToAdd[row - 1][column - 1].setFill(Color.RED);
 						//		System.out.println("You hit a " + Battleship.ShipType);
+					} else if (board[row][column].state == BoardSquare.SquareState.Exposed_Boat_Piece) {
+						System.out.println("This square has already been hit.\nTry again!");
 					}
 				});
 			}
