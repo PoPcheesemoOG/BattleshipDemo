@@ -1,7 +1,16 @@
+import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
+
+import java.io.FileNotFoundException;
+
+import javafx.application.Platform;
+import javafx.scene.*;
+import javafx.scene.control.*;
 
 public class GameBoard {
 
@@ -9,10 +18,10 @@ public class GameBoard {
 	static int width = 10;
 
 	static String coordinates = "";
-	
+
 	static Integer shotsRemaining = 10;
 	static Integer shotsHit = 0;
-	
+
 	static Text shotTracker = new Text(10, ((width * 40) - 10), ("Shots remaining: " + shotsRemaining));
 	static Text hitTracker = new Text(10, ((width * 40) - 20), ("Boat pieces hit: " + shotsHit));
 
@@ -59,13 +68,97 @@ public class GameBoard {
 	static Battleship frigate = new Battleship(Battleship.ShipType.Frigate, "Frigate", 4, 1, frigateX, frigateY);
 	static Battleship dreadnought = new Battleship(Battleship.ShipType.Dreadnought, "Dreadnought", 1, 5, dreadnoughtX, dreadnoughtY);
 
-	public void checkGameEnd(int shotsRemaining, int shotsHit) {
-		if (shotsRemaining == 0) {
-			GUI.start.setScene(loseScene);
-		}
-		
-	}
+	static int sceneH = height * 40;
+	static int sceneW = width * 40;
+	//	static Text loseText = new Text((sceneH / 2 - 50), (sceneW / 2), "You have lost\nCare to try again?");
+	//	static Text winText = new Text((sceneH / 2 - 50), (sceneW / 2), "You have won!!\nCongratlations!\nCare to try again?");
+	//
+	//	// Creating Pane for losing
+	//	public static Group losePane = new Group();
+	//	// Creating Pane for winning
+	//	public static Group winPane = new Group();
+	//	
+	//	static void addLoseText() {
+	//		losePane.getChildren().addAll(loseText);
+	//	}
+	//	static void addWinText() {
+	//		winPane.getChildren().addAll(winText);
+	//	}
+	//	
+	//	Button tryAgain = new Button("TRY AGAIN");
+	//	
+	//	tryAgain.setOnAction(e -> primaryStage.setScene(gameScene));
+	//	
+	//	static Scene loseScene = new Scene(losePane, sceneH, sceneW);
+	//	static Scene winScene = new Scene(winPane, sceneH, sceneW);
+	static Text loseText = new Text((sceneH / 2 - 50), (sceneW / 2), "You have lost\nCare to try again?");
+	static Text winText = new Text((sceneH / 2 - 50), (sceneW / 2), "You have won!!\nCongratlations!\nCare to try again?");
+
+	// Creating Pane for losing
+	public static VBox losePane = new VBox(32);
 	
+	// Creating Pane for winning
+	public static VBox winPane = new VBox(32);
+
+	static void addLoseText() {
+		losePane.getChildren().addAll(loseText);
+	}
+	static void addWinText() {
+		winPane.getChildren().addAll(winText);
+	}
+	static void addLoseButton() {
+		Button tryAgain = new Button("TRY AGAIN");
+		losePane.getChildren().add(tryAgain);
+		tryAgain.setOnAction(e -> {
+			GUI.getStage().close();
+			Platform.runLater( () -> {
+				try {
+					GUI.group.getChildren().clear();
+					shotsRemaining = 10;
+					shotsHit = 0;
+					new GUI().start( new Stage() );
+					
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			});
+			losePane.getChildren().clear();
+			
+		});
+	}
+	static void addWinButton() {
+		Button tryAgain = new Button("TRY AGAIN");
+		winPane.getChildren().addAll(tryAgain);
+		winPane.getChildren().clear();
+		tryAgain.setOnAction(e -> {
+		GUI.getStage().close();
+		Platform.runLater( () -> {
+			try {
+				new GUI().start( new Stage() );
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+		});
+	});
+	}
+
+	public static void checkGameEnd(int shotsRemaining, int shotsHit) {
+
+		if (shotsRemaining == 0 && shotsHit < 17) {
+			Scene loseScene = new Scene(losePane, sceneH, sceneW);
+			addLoseText();
+			addLoseButton();
+			GUI.getStage().setScene(loseScene);
+		}
+		else if (shotsHit == 17) {
+			Scene winScene = new Scene(winPane, sceneH, sceneW);
+			addWinText();
+			addWinButton();
+			GUI.getStage().setScene(winScene);
+		}
+	}
+
+
 	public static void initializeBoard() {
 		// Debugging for the randomization
 		System.out.println("1 tBoat: " + tBoat.row + " " + tBoat.column);
@@ -73,7 +166,6 @@ public class GameBoard {
 		System.out.println("1 Corvette: " + corvette.row + " " + corvette.column);
 		System.out.println("1 Frigate: " + frigate.row + " " + frigate.column);
 		System.out.println("1 Dreadnought: " + dreadnought.row + " " + dreadnought.column);
-
 
 		for(int x = 0; x < board.length; x++) {
 			for(int y = 0; y < board[x].length; y++) {
@@ -136,7 +228,7 @@ public class GameBoard {
 						System.out.println("You missed!");
 						shotsRemaining--;
 						shotTracker.setText("Shots remaining: " + shotsRemaining);
-						
+
 						rectsToAdd[row - 1][column - 1].setFill(Color.DARKBLUE);
 					} else if (board[row][column].state == BoardSquare.SquareState.Hidden_Boat_Piece) {
 						System.out.println("It's a HIT!!!");
@@ -150,6 +242,7 @@ public class GameBoard {
 						System.out.println("This square has already been hit.\nTry again!");
 						shotTracker.setText("Shots remaining: " + shotsRemaining);
 					}
+					checkGameEnd(shotsRemaining, shotsHit);
 				});
 			}
 		}
