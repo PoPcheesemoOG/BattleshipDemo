@@ -1,15 +1,10 @@
 /* Name: Paul Helske
  * Date: 06/15/2023
  */
-import java.util.ArrayList;
 import javafx.application.*;
-import javafx.geometry.Pos;
 import javafx.stage.Stage;
-import javafx.scene.layout.*;
-import javafx.scene.control.*;
 import javafx.scene.paint.*;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.*;
 import javafx.scene.shape.*;
@@ -23,8 +18,8 @@ public class GUI extends Application {
 	private static Stage guiStage;
 	static gameBoard activeBoard; 
 	static public Group group = new Group();
-	
-	static Scene gameScene = new Scene(group, 400, 400);
+
+	static Scene gameScene = new Scene(group, 400, 420);
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -47,11 +42,9 @@ public class GUI extends Application {
 		Rectangle[][] rects = GameBoard.instantiateGridRects();
 		GameBoard.addRectsToGrid(map, rects);
 
-//		int sceneH = activeBoard.height * 40;
-//		int sceneW = activeBoard.width * 40;
-		
 		group.getChildren().add(GameBoard.shotTracker);
 		group.getChildren().add(GameBoard.hitTracker);
+		group.getChildren().add(GameBoard.infoText);
 		group.getChildren().addAll(map);
 
 		primaryStage.setScene(gameScene);
@@ -63,7 +56,6 @@ public class GUI extends Application {
 	public static Scene getScene() {
 		return gameScene;
 	}
-
 	public static void main(String[] args) {
 		launch (args);
 	}
