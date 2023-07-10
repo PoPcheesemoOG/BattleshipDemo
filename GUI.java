@@ -9,7 +9,6 @@ import javafx.scene.layout.*;
 import javafx.scene.control.*;
 import javafx.scene.paint.*;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.Scene;
 import javafx.scene.text.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.*;
@@ -19,25 +18,25 @@ public class GUI extends Application {
 	class gameBoard{
 		public int width = 10;
 		public int height = 10;
-		
+
 	}
-	
+	private static Stage guiStage;
 	static gameBoard activeBoard; 
-	public Group group = new Group();
+	static public Group group = new Group();
+	
+	static Scene gameScene = new Scene(group, 400, 400);
+
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		
+
 		//Creating stage
 		primaryStage.setTitle("BATTLESHIP DEMO");
-		
+
+		guiStage = primaryStage;
+
 		GridPane map = new GridPane();
 		Circle BS = new Circle(0, 0, 10);
 		BS.setFill(Color.RED);
-		
-		// Creating Pane for losing
-		Pane losePane = new Pane();
-		// Creating Pane for winning
-		Pane winPane = new Pane();
 
 		map.add(BS, 0, 0);
 		map.setHgap(3);
@@ -47,24 +46,24 @@ public class GUI extends Application {
 		GameBoard.instantiateGrid(map);
 		Rectangle[][] rects = GameBoard.instantiateGridRects();
 		GameBoard.addRectsToGrid(map, rects);
+
+//		int sceneH = activeBoard.height * 40;
+//		int sceneW = activeBoard.width * 40;
 		
-		int sceneH = activeBoard.height * 40;
-		int sceneW = activeBoard.width * 40;
-		Text loseText = new Text((sceneH / 2), (sceneW / 2), "You have lost\nCare to try again?");
-		Text winText = new Text((sceneH / 2), (sceneW / 2), "You have won!!\nCongratlations!\nCare to try again?");
 		group.getChildren().add(GameBoard.shotTracker);
 		group.getChildren().add(GameBoard.hitTracker);
 		group.getChildren().addAll(map);
-		
-		losePane.getChildren().add(loseText);
-		winPane.getChildren().add(winText);
-		
-		Scene gameScene = new Scene(group, sceneH, sceneW);
-		Scene loseScene = new Scene(losePane, sceneH, sceneW);
-		Scene winScene = new Scene(winPane, sceneH, sceneW);
+
 		primaryStage.setScene(gameScene);
 		primaryStage.show();
 	}
+	public static Stage getStage() {
+		return guiStage;
+	}
+	public static Scene getScene() {
+		return gameScene;
+	}
+
 	public static void main(String[] args) {
 		launch (args);
 	}
